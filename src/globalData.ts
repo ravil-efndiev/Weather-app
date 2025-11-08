@@ -28,4 +28,20 @@ export interface WeatherData {
   temperature?: number;
   humidity?: number;
   windSpeed?: number;
+  isDay?: boolean;
+  conditionsInfo?: {
+    text: string,
+    iconURL: string,
+  }
+}
+
+export interface Coordinates {
+  lat: number;
+  long: number;
+}
+
+export interface Location {
+  name: string;
+  coordinates: Coordinates;
+  weather: WeatherData;
 }

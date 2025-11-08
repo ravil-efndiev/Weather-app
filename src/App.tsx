@@ -1,56 +1,84 @@
 import { useEffect, useState } from "react";
 import {
+  type Coordinates,
   type GlobalData,
-  type WeatherData,
+  type Location,
   GlobalDataContext,
 } from "@/globalData";
-import CityCard from "./Components/CityCard";
-import weatherApi from "./services/api";
+import LocationCard from "./Components/LocationCard";
 import SearchBar from "./Components/SearchBar";
+import { getRealtimeWeather } from "./utils/requests";
+import { AnimatePresence } from "framer-motion";
+import LocationPanel from "./Components/LocationPanel";
 
 function App() {
   const [globalData, setGlobalData] = useState<GlobalData>({
     temperatureUnit: "C",
-    windSpeedUnit: "m/s",
+    windSpeedUnit: "km/h",
   });
 
-  const [savedCities, setSavedCities] = useState<Map<string, WeatherData>>(
-    new Map([["Praha", {}]])
-  );
+  const [savedLocations, setSavedLocations] = useState<Location[]>([]);
+  const [newLocationCoords, setNewLocationCoords] = useState<Coordinates>();
+
+  const [selectedCardBounds, setSelectedCardBounds] = useState<DOMRect | null>(null);
+  const [fullPanelLocationCoords, setFullPanelLocationCoords] = useState<Coordinates | null>(null);
 
   useEffect(() => {
-    const getCitiesWeather = async () => {
+    if (
+      !newLocationCoords ||
+      savedLocations.some(
+        (loc) =>
+          JSON.stringify(loc.coordinates) === JSON.stringify(newLocationCoords) // TODO: make view go to full panel of the duplicate location
+      )
+    )
+      return;
+
+    const updateLocations = async () => {
       try {
-        for (let [city, weather] of savedCities) {
-          const res = await weatherApi.get("/realtime", {
-            params: {
-              location: city,
-              units: globalData.temperatureUnit === "C" ? "metric" : "imperial",
-            },
-          });
-          const weatherData = res.data.data.values;
-          weather = {
-            temperature: weatherData.temperature,
-            humidity: weatherData.humidity,
-            windSpeed: weatherData.windSpeed,
-          };
-          setSavedCities((prev) => new Map(prev).set(city, weather));
-        }
+        const newLocation = await getRealtimeWeather(
+          newLocationCoords,
+          globalData
+        );
+
+        setSavedLocations((prev) => [...prev, newLocation]);
       } catch (err) {
         console.error(err);
       }
     };
-    getCitiesWeather();
-  }, []);
+
+    updateLocations();
+  }, [globalData, newLocationCoords]);
+
+  const handleCardSelect = (coords: Coordinates, cardBounds: DOMRect) => {
+    setSelectedCardBounds(cardBounds);
+    setFullPanelLocationCoords(coords);
+  }
 
   return (
     <GlobalDataContext.Provider value={{ globalData, setGlobalData }}>
       <div className="w-[80%] flex flex-col mx-auto py-10">
-        <SearchBar />
+        <SearchBar
+          onLocationSelect={(coordinates) => setNewLocationCoords(coordinates)}
+        />
 
-        {Array.from(savedCities.entries()).map(([city, weather]) => (
-          <CityCard key={city} cityName={city} weather={weather} />
-        ))}
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-y-7">
+          {savedLocations.map((location) => (
+            <LocationCard key={location.name} location={location} onSelect={handleCardSelect} />
+          ))}
+        </div>
+
+        <AnimatePresence>
+          {fullPanelLocationCoords && selectedCardBounds && (
+            <LocationPanel locationCoordinates={fullPanelLocationCoords} 
+              startAnimationData={{
+                x: selectedCardBounds.x,
+                y: selectedCardBounds.y,
+                width: selectedCardBounds.width,
+                height: selectedCardBounds.height,
+              }}
+            />
+          )}
+        </AnimatePresence>
       </div>
     </GlobalDataContext.Provider>
   );
