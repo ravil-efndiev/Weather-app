@@ -20,8 +20,13 @@ function App() {
   const [savedLocations, setSavedLocations] = useState<Location[]>([]);
   const [newLocationCoords, setNewLocationCoords] = useState<Coordinates>();
 
-  const [selectedCardBounds, setSelectedCardBounds] = useState<DOMRect | null>(null);
-  const [fullPanelLocationCoords, setFullPanelLocationCoords] = useState<Coordinates | null>(null);
+  const [selectedCardBounds, setSelectedCardBounds] = useState<DOMRect | null>(
+    null
+  );
+  const [fullPanelLocationCoords, setFullPanelLocationCoords] =
+    useState<Coordinates | null>(null);
+
+  const [fullPanelLocationName, setFullPanelLocationName] = useState("");
 
   useEffect(() => {
     if (
@@ -50,35 +55,51 @@ function App() {
   }, [globalData, newLocationCoords]);
 
   const handleCardSelect = (coords: Coordinates, cardBounds: DOMRect) => {
+    const found = savedLocations.find(
+      (location) =>
+        JSON.stringify(location.coordinates) === JSON.stringify(coords)
+    );
+    setFullPanelLocationName(found!.name);
     setSelectedCardBounds(cardBounds);
     setFullPanelLocationCoords(coords);
-  }
+  };
+
+  const handleFullPanelClose = () => {
+    setSelectedCardBounds(null);
+    setFullPanelLocationCoords(null);
+  };
 
   return (
     <GlobalDataContext.Provider value={{ globalData, setGlobalData }}>
-      <div className="w-[80%] flex flex-col mx-auto py-10">
+      <AnimatePresence>
+        {fullPanelLocationCoords && selectedCardBounds && (
+          <LocationPanel
+            locationCoordinates={fullPanelLocationCoords}
+            locationName={fullPanelLocationName}
+            startAnimationData={{
+              x: selectedCardBounds.x,
+              y: selectedCardBounds.y,
+              width: selectedCardBounds.width,
+              height: selectedCardBounds.height,
+            }}
+            onClose={handleFullPanelClose}
+          />
+        )}
+      </AnimatePresence>
+      <div className="w-[80%] flex flex-col mx-auto py-10 h-dvh">
         <SearchBar
           onLocationSelect={(coordinates) => setNewLocationCoords(coordinates)}
         />
 
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-y-7">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-y-7 overflow-y-auto py-5">
           {savedLocations.map((location) => (
-            <LocationCard key={location.name} location={location} onSelect={handleCardSelect} />
+            <LocationCard
+              key={location.name}
+              location={location}
+              onSelect={handleCardSelect}
+            />
           ))}
         </div>
-
-        <AnimatePresence>
-          {fullPanelLocationCoords && selectedCardBounds && (
-            <LocationPanel locationCoordinates={fullPanelLocationCoords} 
-              startAnimationData={{
-                x: selectedCardBounds.x,
-                y: selectedCardBounds.y,
-                width: selectedCardBounds.width,
-                height: selectedCardBounds.height,
-              }}
-            />
-          )}
-        </AnimatePresence>
       </div>
     </GlobalDataContext.Provider>
   );
