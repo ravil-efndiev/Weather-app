@@ -1,18 +1,19 @@
 import { motion } from "framer-motion";
 import { type PropsWithChildren } from "react";
+import { useTheme } from "../ThemeProvider";
 
 interface Props extends PropsWithChildren {
-  isDay?: boolean;
   appearAnimationDelay?: number;
   fadeInOnScroll?: boolean;
 }
 
 function LocationPanelSection({
-  isDay,
   appearAnimationDelay,
   fadeInOnScroll,
   children,
 }: Props) {
+  const theme = useTheme();
+
   return (
     <motion.div
       initial={{
@@ -30,10 +31,7 @@ function LocationPanelSection({
       transition={{
         delay: appearAnimationDelay,
       }}
-      className="w-[70%] items-center justify-center rounded-3xl mx-auto p-5 mb-10"
-      style={{
-        backgroundColor: isDay ? "rgba(180,200,220,0.45)" : "#e5e7eb11",
-      }}
+      className={`w-[70%] items-center justify-center rounded-3xl mx-auto p-5 mb-10 ${theme.widgetBackground}`}
       whileInView={fadeInOnScroll ? { opacity: 1, y: 0 } : {}}
       viewport={
         fadeInOnScroll
