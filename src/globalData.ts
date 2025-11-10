@@ -25,14 +25,14 @@ export function useGlobalData() {
 }
 
 export interface WeatherData {
-  temperature?: number;
-  feelsLike?: number;
-  humidity?: number;
-  dewPoint?: number;
-  uvIndex?: number;
-  windSpeed?: number;
-  isDay?: boolean;
-  conditionsInfo?: {
+  temperature: number;
+  feelsLike: number;
+  humidity: number;
+  dewPoint: number;
+  uvIndex: number;
+  windSpeed: number;
+  isDay: boolean;
+  conditionsInfo: {
     text: string;
     iconURL: string;
   }
@@ -50,13 +50,13 @@ export interface Location {
 }
 
 export interface DayData {
-  date?: string;
-  avgTemp?: number;
-  minTemp?: number;
-  maxTemp?: number;
-  sunrise?: string;
-  sunset?: string;
-  conditionsInfo?: {
+  date: string;
+  avgTemp: number;
+  minTemp: number;
+  maxTemp: number;
+  sunrise: string;
+  sunset: string;
+  conditionsInfo: {
     text: string;
     iconURL: string;
   }

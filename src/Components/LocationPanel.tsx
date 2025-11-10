@@ -17,6 +17,7 @@ import LocationPanelWrapper, {
   type StartAnimationData,
 } from "./LocationPanel/LocationPanelWrapper";
 import ThemeProvider from "./ThemeProvider";
+import DailyDataPanel, { type DailyDataPanelReqInfo } from "./DailyDataPanel";
 
 interface Props {
   locationCoordinates: Coordinates /* using coords here instead of passing a
@@ -39,6 +40,9 @@ function LocationPanel({
   const [avgDayData, setAvgDayData] = useState<DayData>();
   const [hourlyWeatherData, setHourlyWeatherData] = useState<WeatherData[]>([]);
   const [forecast, setForecast] = useState<Forecast>([]);
+  const [dailyDataPanelOpen, setDailyDataPanelOpen] = useState(false);
+  const [dailyDataPanelInfo, setDailyDataPanelInfo] =
+    useState<DailyDataPanelReqInfo>();
 
   useEffect(() => {
     const getAllLocationData = async () => {
@@ -63,29 +67,51 @@ function LocationPanel({
     getAllLocationData();
   }, [locationCoordinates, globalData]);
 
+  const handleDailyDataPanelOpen = (
+    hourlyData: WeatherData[],
+    dayData: DayData
+  ) => {
+    setDailyDataPanelOpen(true);
+    setDailyDataPanelInfo({ hourlyData, dayData });
+  };
+
   return (
     <ThemeProvider isDay={location?.weather.isDay}>
-      <LocationPanelWrapper
-        onAppearAnimationComplete={() => setAppearAnimationComplete(true)}
-        startAnimationData={startAnimationData}
-      >
-        <LocationPanelHeader onClose={onClose} location={location} />
-        <AnimatePresence>
-          {appearAnimationComplete && (
-            <>
-              <LocationPanelHourly
-                location={location}
-                hourlyWeatherData={hourlyWeatherData}
-              />
-              <LocationPanelForecast forecast={forecast} />
-              <LocationPanelWidgets
-                location={location}
-                avgDayData={avgDayData}
-              />
-            </>
-          )}
-        </AnimatePresence>
-      </LocationPanelWrapper>
+      {dailyDataPanelInfo && (
+        <DailyDataPanel
+          open={dailyDataPanelOpen}
+          reqInfo={dailyDataPanelInfo}
+          onClose={() => setDailyDataPanelOpen(false)}
+        />
+      )}
+      {location && avgDayData && (
+        <LocationPanelWrapper
+          onAppearAnimationComplete={() => setAppearAnimationComplete(true)}
+          startAnimationData={startAnimationData}
+        >
+          <LocationPanelHeader onClose={onClose} location={location} />
+          <AnimatePresence>
+            {appearAnimationComplete && (
+              <>
+                <LocationPanelHourly
+                  hourlyWeatherData={hourlyWeatherData}
+                  onDailyPanelOpen={(hourlyData) =>
+                    handleDailyDataPanelOpen(hourlyData, avgDayData)
+                  }
+                />
+                <LocationPanelForecast
+                  forecast={forecast}
+                  onDailyPanelOpen={handleDailyDataPanelOpen}
+                />
+                <LocationPanelWidgets
+                  location={location}
+                  avgDayData={avgDayData}
+                />
+              </>
+            )}
+          </AnimatePresence>
+        </LocationPanelWrapper>
+      )}
     </ThemeProvider>
   );
 }

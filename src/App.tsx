@@ -59,7 +59,8 @@ function App() {
       (location) =>
         JSON.stringify(location.coordinates) === JSON.stringify(coords)
     );
-    setFullPanelLocationName(found!.name);
+    if (!found) return;
+    setFullPanelLocationName(found.name);
     setSelectedCardBounds(cardBounds);
     setFullPanelLocationCoords(coords);
   };

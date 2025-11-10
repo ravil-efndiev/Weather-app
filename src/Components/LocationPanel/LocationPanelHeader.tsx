@@ -4,7 +4,7 @@ import arrowLeft from "@/assets/arrow-left-3099.svg";
 
 interface Props {
   onClose: () => void;
-  location?: Location;
+  location: Location;
 }
 
 function LocationPanelHeader({ onClose, location }: Props) {
@@ -27,14 +27,14 @@ function LocationPanelHeader({ onClose, location }: Props) {
         }}
         className="w-1/3 flex mx-auto flex-col text-center items-center mb-8"
       >
-        <h1 className="text-6xl mb-5">{location?.name}</h1>
+        <h1 className="text-6xl mb-5">{location.name}</h1>
         <h2 className="text-3xl mb-3">
-          {location?.weather.temperature}°{globalData.temperatureUnit}
+          {Math.round(location.weather.temperature || 0)}°{globalData.temperatureUnit}
         </h2>
         <p className="text-xl text-[#DBDEE4] font-light">
-          {location?.weather.conditionsInfo?.text}
+          {location.weather.conditionsInfo.text}
         </p>
-        <img src={location?.weather.conditionsInfo?.iconURL} width="42px" />
+        <img src={location.weather.conditionsInfo.iconURL} width="42px" />
       </motion.div>
     </>
   );

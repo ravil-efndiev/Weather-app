@@ -12,17 +12,16 @@ const convertWeatherData = (
   rawData: any,
   globalData: GlobalData
 ): WeatherData => ({
-  temperature: Math.round(
-    globalData.temperatureUnit === "C" ? rawData.temp_c : rawData.temp_f
-  ),
-  feelsLike: Math.round(
+  temperature:
+    globalData.temperatureUnit === "C" ? rawData.temp_c : rawData.temp_f,
+  feelsLike:
     globalData.temperatureUnit === "C"
       ? rawData.feelslike_c
-      : rawData.feelslike_f
-  ),
-  dewPoint: Math.round(
-    globalData.temperatureUnit === "C" ? rawData.dewpoint_c : rawData.dewpoint_f
-  ),
+      : rawData.feelslike_f,
+  dewPoint:
+    globalData.temperatureUnit === "C"
+      ? rawData.dewpoint_c
+      : rawData.dewpoint_f,
   humidity: rawData.humidity,
   windSpeed:
     globalData.windSpeedUnit === "km/h" ? rawData.wind_kph : rawData.wind_mph,
@@ -36,21 +35,18 @@ const convertWeatherData = (
 
 const convertDayData = (rawData: any, globalData: GlobalData): DayData => ({
   date: rawData.date,
-  avgTemp: Math.round(
+  avgTemp:
     globalData.temperatureUnit === "C"
       ? rawData.day.avgtemp_c
-      : rawData.day.avgtemp_f
-  ),
-  minTemp: Math.round(
+      : rawData.day.avgtemp_f,
+  minTemp:
     globalData.temperatureUnit === "C"
       ? rawData.day.mintemp_c
-      : rawData.day.mintemp_f
-  ),
-  maxTemp: Math.round(
+      : rawData.day.mintemp_f,
+  maxTemp:
     globalData.temperatureUnit === "C"
       ? rawData.day.maxtemp_c
-      : rawData.day.maxtemp_f
-  ),
+      : rawData.day.maxtemp_f,
   sunrise: rawData.astro.sunrise,
   sunset: rawData.astro.sunset,
   conditionsInfo: {

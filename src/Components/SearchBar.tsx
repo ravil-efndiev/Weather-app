@@ -33,8 +33,6 @@ function SearchBar({ onLocationSelect }: Props) {
           },
         });
 
-        console.log(res.data);
-
         setFoundLocations(
           res.data.results
             ?.filter((result: any) => result.country && result.admin1)
