@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   type Coordinates,
   type GlobalData,
-  type Location,
   GlobalDataContext,
 } from "@/globalData";
 import LocationCard from "./Components/LocationCard";
@@ -10,6 +9,8 @@ import SearchBar from "./Components/SearchBar";
 import { getRealtimeWeather } from "./utils/requests";
 import { AnimatePresence } from "framer-motion";
 import LocationPanel from "./Components/LocationPanel";
+import useSavedLocations from "./utils/useSavedLocations";
+import { saveLocationsToLocalStorage } from "./utils/misc";
 
 function App() {
   const [globalData, setGlobalData] = useState<GlobalData>({
@@ -17,7 +18,7 @@ function App() {
     windSpeedUnit: "km/h",
   });
 
-  const [savedLocations, setSavedLocations] = useState<Location[]>([]);
+  const { savedLocations, setSavedLocations } = useSavedLocations(globalData);
   const [newLocationCoords, setNewLocationCoords] = useState<Coordinates>();
 
   const [selectedCardBounds, setSelectedCardBounds] = useState<DOMRect | null>(
@@ -33,7 +34,7 @@ function App() {
       !newLocationCoords ||
       savedLocations.some(
         (loc) =>
-          JSON.stringify(loc.coordinates) === JSON.stringify(newLocationCoords) // TODO: make view go to full panel of the duplicate location
+          JSON.stringify(loc.coordinates) === JSON.stringify(newLocationCoords) 
       )
     )
       return;
@@ -45,7 +46,11 @@ function App() {
           globalData
         );
 
-        setSavedLocations((prev) => [...prev, newLocation]);
+        setSavedLocations((prev) => {
+          const newArray = [...prev, newLocation];
+          saveLocationsToLocalStorage(newArray);
+          return newArray;
+        });
       } catch (err) {
         console.error(err);
       }
@@ -63,6 +68,16 @@ function App() {
     setFullPanelLocationName(found.name);
     setSelectedCardBounds(cardBounds);
     setFullPanelLocationCoords(coords);
+  };
+
+  const handleCardDelete = (coords: Coordinates) => {
+    setSavedLocations((prev) => {
+      const newArray = prev.filter(
+        (location) => location.coordinates !== coords
+      );
+      saveLocationsToLocalStorage(newArray);
+      return newArray;
+    });
   };
 
   const handleFullPanelClose = () => {
@@ -87,17 +102,18 @@ function App() {
           />
         )}
       </AnimatePresence>
-      <div className="w-[80%] flex flex-col mx-auto py-10 h-dvh">
+      <div className="w-[90%] flex flex-col mx-auto py-10 h-dvh">
         <SearchBar
           onLocationSelect={(coordinates) => setNewLocationCoords(coordinates)}
         />
 
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-y-7 overflow-y-auto py-5">
+        <div className="w-[98%] mx-auto grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-y-7 overflow-y-auto py-5 px-5">
           {savedLocations.map((location) => (
             <LocationCard
               key={location.name}
               location={location}
               onSelect={handleCardSelect}
+              onDelete={handleCardDelete}
             />
           ))}
         </div>

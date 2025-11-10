@@ -1,7 +1,7 @@
 import type { DayData, Forecast, WeatherData } from "@/globalData";
 import LocationPanelSection from "./LocationPanelSection";
 import { useTheme } from "../ThemeProvider";
-import renderDayName from "@/utils/renderDayName";
+import { renderDayName } from "@/utils/misc";
 
 interface Props {
   forecast: Forecast;
@@ -15,12 +15,12 @@ function LocationPanelForecast({ forecast, onDailyPanelOpen }: Props) {
     <LocationPanelSection appearAnimationDelay={0.1}>
       <p className="text-xl mb-5">7 day forecast</p>
       <ul
-        className={`flex flex-col overflow-x-auto justify-around text-xl pt-2 rounded-lg cursor-pointer ${theme.cardBackground}`}
+        className={`flex flex-col overflow-x-auto justify-around text-xl pt-2 rounded-lg ${theme.cardBackground}`}
       >
         {forecast.map(({ dayData, hourlyData }, index) => (
           <li
             key={index}
-            className={`flex p-2 m-2 border-b ${theme.border}`}
+            className={`flex p-2 m-2 border-b cursor-pointer ${theme.border}`}
             onClick={() => onDailyPanelOpen(hourlyData, dayData)}
           >
             <p className="w-32">

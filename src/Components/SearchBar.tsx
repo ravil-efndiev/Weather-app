@@ -56,12 +56,12 @@ function SearchBar({ onLocationSelect }: Props) {
   }, [debouncedQuery]);
 
   return (
-    <div className="flex mb-10">
+    <div className="flex mb-10 w-[80%] mx-auto">
       <input
         ref={inputRef}
         type="text"
         placeholder="Search for your city..."
-        className="w-[90%] flex-1 mx-auto bg-gray-700 rounded-full 
+        className="flex-1 bg-gray-700 rounded-full 
                   py-5 px-9 border border-transparent
                 focus:border-gray-400 transition shadow-lg"
         onChange={(e) => setSearchQuery(e.target.value)}
@@ -79,7 +79,7 @@ function SearchBar({ onLocationSelect }: Props) {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
             className={
-              "absolute left-0 right-0 bg-slate-800 rounded-2xl shadow-lg p-4 mx-auto"
+              "absolute z-20 left-0 right-0 bg-slate-800 rounded-2xl shadow-lg p-4 mx-auto"
             }
             style={{
               width: inputRef.current?.offsetWidth,

@@ -2,7 +2,8 @@ import { useGlobalData, type DayData, type WeatherData } from "@/globalData";
 import { AnimatePresence, motion } from "motion/react";
 import arrowLeft from "@/assets/arrow-left-3099.svg";
 import { Line } from "react-chartjs-2";
-import renderDayName from "@/utils/renderDayName";
+import { renderDayName } from "@/utils/misc";
+import { useEffect } from "react";
 
 export interface DailyDataPanelReqInfo {
   hourlyData: WeatherData[];
@@ -18,6 +19,18 @@ interface Props {
 function DailyDataPanel({ reqInfo, open, onClose }: Props) {
   const { hourlyData, dayData } = reqInfo;
   const { globalData } = useGlobalData();
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const formOptions = () => {
     const temperatures = hourlyData.map((data) => data.temperature);
