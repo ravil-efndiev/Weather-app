@@ -27,7 +27,7 @@ function LocationPanelHeader({ onClose, location }: Props) {
         }}
         className="w-1/3 flex mx-auto flex-col text-center items-center mb-8"
       >
-        <h1 className="text-6xl mb-5">{location.name}</h1>
+        <h1 className="text-6xl max-sm:text-5xl mb-5">{location.name}</h1>
         <h2 className="text-3xl mb-3">
           {Math.round(location.weather.temperature || 0)}°{globalData.temperatureUnit}
         </h2>

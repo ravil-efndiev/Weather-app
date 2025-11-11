@@ -17,28 +17,28 @@ function LocationPanelWidgets({ location, avgDayData }: Props) {
 
   return (
     <LocationPanelSection fadeInOnScroll={true}>
-      <div className="grid grid-cols-4 gap-7">
+      <div className="grid grid-cols-4 max-lg:grid-cols-2 gap-7">
         <div className={widgetClasses}>
           <p className="text-lg font-light mb-3">Feels like</p>
-          <p className="text-3xl">
+          <p className="text-3xl max-[450px]:text-xl">
             {Math.round(location.weather.feelsLike || 0)}°
             {globalData.temperatureUnit}
           </p>
         </div>
         <div className={widgetClasses}>
           <p className="text-lg font-light mb-3">Wind speed</p>
-          <p className="text-3xl">
+          <p className="text-3xl max-[450px]:text-xl">
             {location.weather.windSpeed} {globalData.windSpeedUnit}
           </p>
         </div>
         <div className={widgetClasses}>
           <p className="text-lg font-light mb-3">Humidity</p>
-          <p className="text-3xl mb-1">{location.weather.humidity}%</p>
-          <p>Dew point is {Math.round(location.weather.dewPoint || 0)}°</p>
+          <p className="text-3xl max-[450px]:text-xl mb-1">{location.weather.humidity}%</p>
+          <p className="max-[450px]:text-sm text-lg font-light">Dew point is {Math.round(location.weather.dewPoint || 0)}°</p>
         </div>
         <div className={widgetClasses}>
           <p className="text-lg font-light mb-3">UV index</p>
-          <p className="text-3xl mb-1">{location.weather.uvIndex}</p>
+          <p className="text-3xl max-[450px]:text-xl mb-1">{location.weather.uvIndex}</p>
         </div>
         <div className={widgetClasses + " flex col-span-2 justify-around"}>
           <div>
@@ -49,12 +49,12 @@ function LocationPanelWidgets({ location, avgDayData }: Props) {
               className="mx-auto"
             />
             <p className="text-lg font-light mb-3 text-center">Sunrise</p>
-            <p className="text-3xl mb-1">{avgDayData.sunrise}</p>
+            <p className="text-3xl mb-1 max-[450px]:text-xl">{avgDayData.sunrise}</p>
           </div>
           <div>
             <img src={sunsetImg} alt="Sunset" width={30} className="mx-auto" />
             <p className="text-lg font-light mb-3 text-center">Sunset</p>
-            <p className="text-3xl mb-1">{avgDayData.sunset}</p>
+            <p className="text-3xl mb-1 max-[450px]:text-xl">{avgDayData.sunset}</p>
           </div>
         </div>
       </div>

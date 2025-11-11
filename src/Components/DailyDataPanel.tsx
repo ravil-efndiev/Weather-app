@@ -116,16 +116,16 @@ function DailyDataPanel({ reqInfo, open, onClose }: Props) {
             <img src={arrowLeft} alt="" width={40} />
             <p className="text-gray-200 my-auto text-2xl font-light">Back</p>
           </button>
-          <h2 className="text-center text-4xl mb-6">
+          <h2 className="text-center text-4xl max-sm:text-3xl mb-6">
             {renderDayName(dayData.date, "long")}
           </h2>
-          <div className="max-w-3/4 bg-slate-700 p-3 border border-slate-800 mx-auto ">
+          <div className="max-w-3/4 max-md:max-w-[85%] max-sm:max-w-[95%] bg-slate-700 p-3 border border-slate-800 mx-auto ">
             <div className={`flex justify-between`}>
-              <p className="text-2xl mb-3 my-auto">
+              <p className="text-2xl max-sm:text-xl mb-3 my-auto">
                 <span className="font-light">Average:</span> {dayData.avgTemp}°
                 {globalData.temperatureUnit}
               </p>
-              <img src={dayData.conditionsInfo.iconURL} className="" />
+              <img src={dayData.conditionsInfo.iconURL} className="max-sm:w-[50px]" />
             </div>
             <Line data={formData()} options={formOptions()} />
           </div>

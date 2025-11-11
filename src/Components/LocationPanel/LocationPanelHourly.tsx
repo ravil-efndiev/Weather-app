@@ -14,11 +14,11 @@ function LocationPanelHourly({ hourlyWeatherData, onDailyPanelOpen }: Props) {
     <LocationPanelSection appearAnimationDelay={0}>
       <p className="text-xl mb-5">Hourly conditions</p>
       <ul
-        className={`flex overflow-x-auto justify-around text-xl pt-2 rounded-lg cursor-pointer ${theme.cardBackground}`}
+        className={`flex overflow-x-auto justify-around text-xl max-sm:text-lg pt-2 rounded-lg cursor-pointer ${theme.cardBackground}`}
         onClick={() => onDailyPanelOpen(hourlyWeatherData)}
       >
         {hourlyWeatherData.map((data, hour) => (
-          <li key={hour} className="m-5 w-9 shrink-0">
+          <li key={hour} className="m-5 max-sm:m-3 w-9 shrink-0">
             <p className="text-center text-gray-300 mb-3">
               {hour < 10 ? `0${hour}` : hour}
             </p>

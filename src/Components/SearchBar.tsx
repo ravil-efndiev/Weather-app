@@ -56,7 +56,7 @@ function SearchBar({ onLocationSelect }: Props) {
   }, [debouncedQuery]);
 
   return (
-    <div className="flex mb-10 w-[80%] mx-auto">
+    <div className="flex mb-10 w-[80%] max-sm:w-[90%] mx-auto">
       <input
         ref={inputRef}
         type="text"

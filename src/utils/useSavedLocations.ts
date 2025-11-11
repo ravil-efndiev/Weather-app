@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { type Coordinates, type GlobalData, type Location } from "@/globalData";
 import { getRealtimeWeather } from "./requests";
 
-function useSavedLocations(globalData: GlobalData) {
+function useSavedLocations(globalData: GlobalData): [Location[], Dispatch<SetStateAction<Location[]>>] {
   const [savedLocations, setSavedLocations] = useState<Location[]>([]);
 
   useEffect(() => {
@@ -24,9 +24,9 @@ function useSavedLocations(globalData: GlobalData) {
     };
 
     getLocationsData();
-  }, []);
+  }, [globalData]);
 
-  return { savedLocations, setSavedLocations };
+  return [ savedLocations, setSavedLocations ];
 }
 
 export default useSavedLocations;

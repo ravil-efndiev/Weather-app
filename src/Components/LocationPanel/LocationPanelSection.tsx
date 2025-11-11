@@ -31,7 +31,7 @@ function LocationPanelSection({
       transition={{
         delay: appearAnimationDelay,
       }}
-      className={`w-[70%] items-center justify-center rounded-3xl mx-auto p-5 mb-10 ${theme.widgetBackground}`}
+      className={`md:w-[70%] w-[90%] items-center justify-center rounded-3xl mx-auto p-5 mb-10 ${theme.widgetBackground}`}
       whileInView={fadeInOnScroll ? { opacity: 1, y: 0 } : {}}
       viewport={
         fadeInOnScroll
