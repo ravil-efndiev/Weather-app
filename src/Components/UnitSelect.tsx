@@ -1,5 +1,5 @@
 import { useGlobalData } from "@/globalData";
-import React from "react";
+import React, { useEffect } from "react";
 
 interface Props {
   classes?: string;
@@ -8,15 +8,28 @@ interface Props {
 function UnitSelect({ classes }: Props) {
   const { globalData, setGlobalData } = useGlobalData();
 
+  useEffect(() => {
+    const tempUnitSaved = localStorage.getItem("tempUnit");
+    const speedUnitSaved = localStorage.getItem("speedUnit");
+
+    setGlobalData((prev) => ({
+      ...prev,
+      temperatureUnit: tempUnitSaved || prev.temperatureUnit,
+      windSpeedUnit: speedUnitSaved || prev.windSpeedUnit,
+    }));
+  }, []);
+
   const handleTempUnitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    localStorage.setItem("tempUnit", e.target.value);
     setGlobalData((prev) => ({ ...prev, temperatureUnit: e.target.value }));
   };
 
   const handleSpeedUnitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    localStorage.setItem("speedUnit", e.target.value);
     setGlobalData((prev) => ({ ...prev, windSpeedUnit: e.target.value }));
   };
 
-  const commonSelectStyles = "bg-gray-700 p-2 rounded-md cursor-pointer"
+  const commonSelectStyles = "bg-gray-700 p-2 rounded-md cursor-pointer";
 
   return (
     <div className={classes}>
