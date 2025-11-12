@@ -11,7 +11,6 @@ import { AnimatePresence } from "framer-motion";
 import LocationPanel from "./Components/LocationPanel";
 import useSavedLocations from "./utils/useSavedLocations";
 import { saveLocationsToLocalStorage } from "./utils/misc";
-import UnitSelect from "./Components/UnitSelect";
 import AppHeader from "./Components/AppHeader";
 
 function App() {
