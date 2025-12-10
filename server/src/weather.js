@@ -1,64 +1,69 @@
 import { Router } from "express";
-import { weatherApi } from "./axios";
-import { convertWeatherData } from "./formatting";
-import { convertDayData } from "./formatting";
+import { weatherApi } from "./index.js";
+import { convertWeatherData, convertDayData } from "./formatting.js";
 
 export const weatherRoute = new Router();
 
 weatherRoute.get("/forecast", async (req, res) => {
   try {
-    const { coordinates, globalData, days } = req.query;
+    const { lat, long, globalData, days } = req.query;
+    const globalDataObj = JSON.parse(globalData);
     const apiRes = await weatherApi.get("/forecast.json", {
       params: {
-        q: `${coordinates.lat},${coordinates.long}`,
+        q: `${lat},${long}`,
         days: days,
       },
     });
 
-    const currentWeather = convertWeatherData(apiRes.data.current, globalData);
+    const currentWeather = convertWeatherData(
+      apiRes.data.current,
+      globalDataObj
+    );
     const locName = apiRes.data.location.name;
 
     const forecast = [];
     for (const resDayData of apiRes.data.forecast.forecastday) {
-      const dayData = convertDayData(resDayData, globalData);
+      const dayData = convertDayData(resDayData, globalDataObj);
       const hourlyData = resDayData.hour.map((data) =>
-        convertWeatherData(data, globalData)
+        convertWeatherData(data, globalDataObj)
       );
       forecast.push({ dayData, hourlyData });
     }
 
-    console.log(apiRes.data);
     return res
       .json({
         location: {
           name: locName,
           weather: currentWeather,
-          coordinates: coordinates,
+          coordinates: {lat, long},
         },
         forecast: forecast,
       })
       .status(200);
   } catch (err) {
+    console.error(err);
     return res.json({ error: err }).status(400);
   }
 });
 
 weatherRoute.get("/realtime", async (req, res) => {
   try {
-    const { coordinates, globalData } = req.query;
+    const { lat, long, globalData } = req.query;
+    const globalDataObj = JSON.parse(globalData);
     const apiRes = await weatherApi.get("/current.json", {
       params: {
-        q: `${coordinates.lat},${coordinates.long}`,
+        q: `${lat},${long}`,
       },
     });
-
+    
     const weatherData = apiRes.data.current;
-    const locWeather = convertWeatherData(weatherData, globalData);
+    const locWeather = convertWeatherData(weatherData, globalDataObj);
     const locName = apiRes.data.location.name;
     return res
-      .json({ name: locName, weather: locWeather, coordinates: coordinates })
+      .json({ name: locName, weather: locWeather, coordinates: {lat, long} })
       .status(200);
   } catch (err) {
+    console.error(err);
     return res.json({ error: err }).status(400);
   }
 });
