@@ -15,10 +15,12 @@
   "type": "module",
   "main": "server/src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon"
+    "start": "node .",
+    "dev": "nodemon",
+    "build": "npm install --prefix client && npm run build --prefix client && npm install"
   },
   "dependencies": {
+    "@upstash/redis": "^1.35.7",
     "axios": "^1.13.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
