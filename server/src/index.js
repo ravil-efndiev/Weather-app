@@ -21,8 +21,8 @@ app.use(
   cors({ "Access-Control-Allow-Origin": process.env.DEV_CLIENT_URL || "/" })
 );
 
-app.use("/weather", weatherRoute);
-app.use("/location", locationRoute);
+app.use("/api/weather", weatherRoute);
+app.use("/api/location", locationRoute);
 
 const dirname = path.resolve();
 app.use(express.static(path.join(dirname, "client", "dist"))); 
