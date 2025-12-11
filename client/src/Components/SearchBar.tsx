@@ -1,6 +1,6 @@
 import { useDebounce } from "use-debounce";
 import { useEffect, useRef, useState } from "react";
-import { locationSearchApi } from "@/utils/api";
+import { api } from "@/utils/api";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Coordinates } from "@/globalData";
 
@@ -27,26 +27,11 @@ function SearchBar({ onLocationSelect }: Props) {
   useEffect(() => {
     const getLocations = async () => {
       try {
-        const res = await locationSearchApi.get("/", {
-          params: {
-            name: debouncedQuery,
-          },
+        const res = await api.get("/location", {
+          params: { name: debouncedQuery },
         });
 
-        setFoundLocations(
-          res.data.results
-            ?.filter((result: any) => result.country && result.admin1)
-            ?.map((result: any) => {
-              return {
-                id: result.id,
-                name: result.name,
-                country: result.country,
-                admin1: result.admin1,
-                lat: result.latitude,
-                long: result.longitude,
-              };
-            }) || []
-        );
+        setFoundLocations(res.data.found);
       } catch (err) {
         console.error(err);
       }
